@@ -7,10 +7,19 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class UserService {
     constructor(@InjectRepository(User) private userRepository:Repository<User>){}
-    findUser(){
-        return this.userRepository.find();
+
+    //to find user by providing username and password
+    findUserByUsername(username: string): Promise<User> {
+        return this.userRepository.findOne({ where: { username } });
     }
+    
+    //to create a new user
     async createUser(userDetails: CreateUserParams): Promise<User> {
+
+        const existingUser = await this.userRepository.findOne({ where: { username: userDetails.username } });
+        if (existingUser) {
+            throw new BadRequestException('Username already exists', '400');
+        }
         
         if (!userDetails.username || !userDetails.password || !userDetails.role) {
             throw new BadRequestException('Username, password, and role are required', '400');
@@ -19,3 +28,4 @@ export class UserService {
         return await this.userRepository.save(newUser);
     }
 }
+
