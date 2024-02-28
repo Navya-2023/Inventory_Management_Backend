@@ -8,8 +8,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { User } from 'src/typeorm/entities/user.entity';
-import { CreateUserParams } from 'src/user/dtos/CreateUser.dto';
-import { UserService } from 'src/user/services/user/user.service';
+import { CreateUserParams } from 'src/modules/user/dtos/CreateUser.dto';
+import { UserService } from 'src/modules/user/services/user/user.service';
 
 @Controller('user')
 export class UserController {
@@ -20,6 +20,14 @@ export class UserController {
     const user = await this.userService.findUserByUsername(username);
     if (!user) {
       throw new NotFoundException(`User with username '${username}' not found`);
+    }
+    return user;
+  }
+  @Get(':id')
+  async getUserById(@Param('id') id: number): Promise<User> {
+    const user = await this.userService.findUserById(id);
+    if (!user) {
+      throw new NotFoundException(`User with id '${id}' not found`);
     }
     return user;
   }
