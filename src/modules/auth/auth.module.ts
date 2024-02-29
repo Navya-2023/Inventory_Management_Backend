@@ -4,12 +4,14 @@ import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { jwtConstants } from './constants';
-import { UserService } from 'src/user/services/user/user.service';
+import { UserService } from '../user/services/user/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/typeorm/entities/user.entity';
 import { AuthGuard } from './auth.guard';
 import { APP_GUARD } from '@nestjs/core/constants';
-
+import { ProductModule } from '../product/product.module';
+import { Product } from 'src/typeorm/entities/product.entity';
+import { ProductService } from '../product/services/product/product.service';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { APP_GUARD } from '@nestjs/core/constants';
     }),
     UserModule,
   ],
-  providers: [ AuthService, UserService],
+  providers: [AuthService, UserService],
   controllers: [AuthController],
   exports: [AuthService],
 })

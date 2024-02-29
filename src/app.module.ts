@@ -1,25 +1,15 @@
-// import { Module } from '@nestjs/common';
-// import { AppController } from './app.controller';
-// import { AppService } from './app.service';
-
-// @Module({
-//   imports: [],
-//   controllers: [AppController],
-//   providers: [AppService],
-// })
-// export class AppModule {}
-
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Product } from './typeorm/entities/product.entity';
 import { User } from './typeorm/entities/user.entity';
-import { ProductModule } from './product/product.module';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-// import { AuthModule } from './authentication/auth/auth.module';
-// import { AuthModule } from './auth/auth.module';
+import { ProductModule } from './modules/product/product.module';
+import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+
+
 
 @Module({
   imports: [
@@ -38,6 +28,12 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+ providers: [
+    AppService,
+    // {
+    //   provide: APP_GUARD, 
+    //   useClass: RolesGuard,
+    // },
+  ],
 })
 export class AppModule {}
