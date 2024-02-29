@@ -10,16 +10,16 @@ import { Repository } from 'typeorm';
 export class ProductService {
   constructor(
     @InjectRepository(Product) private productRepository: Repository<Product>,
-    // @InjectRepository(User) private userRepository: Repository<User>,
     private authService: AuthService,
   ) {}
 
+  //to add product
   async createProduct(
     token: string,
     productDetails: CreateProductParams,
   ): Promise<Product> {
     const decodedUser = await this.authService.decodeToken(token);
-    console.log(decodedUser)
+    console.log(decodedUser);
     if (!decodedUser) {
       throw new NotFoundException('User not found in token');
     }
@@ -32,18 +32,35 @@ export class ProductService {
     });
     return await this.productRepository.save(newProduct);
   }
-  // async createProduct(token: string, productDetails: CreateProductParams): Promise<Product> {
-  //   const decodedUser = await this.authService.decodeToken(token);
-  //   if (!decodedUser) {
-  //     throw new NotFoundException('User not found in token');
-  //   }
 
-  //   //const createdBy = decodedUser.sub;
+  //to delete product
+  async deleteProduct(id: number): Promise<void> {
+    const product = await this.productRepository.findOne({ where: { id } });
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    const productName = product.name;
+    const productId = product.id;
+    await this.productRepository.remove(product);
+    console.log(
+      'Product ',
+      productName,
+      ' with ID',
+      productId,
+      'deleted successfully',
+    );
+  }
 
-  //   const newProduct = this.productRepository.create({
-  //     ...productDetails,
-  //     createdBy: decodedUser,
-  //   });
-  //   return await this.productRepository.save(newProduct);
-  // }
+  //to update product
+  async editProduct(
+    id: number,
+    updateProductDto: Partial<CreateProductParams>,
+  ): Promise<Product> {
+    const product = await this.productRepository.findOne({ where: { id } });
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    Object.assign(product, updateProductDto);
+    return await this.productRepository.save(product);
+  }
 }
