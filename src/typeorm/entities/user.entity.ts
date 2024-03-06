@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { Product } from './product.entity'; 
-//import { Role } from 'src/modules/roles/role.enum';
+import { Role } from 'src/modules/roles/role.enum';
 
 @Entity()
 export class User {
@@ -11,14 +11,15 @@ export class User {
   username: string;
 
   @Column()
+  email: string;
+
+  @Column()
   password: string;
 
-  //@Column()
-  
-  // @JoinTable()
-  // roles: Role[];
-  @Column('simple-array')
-  role: string;
+  @Column('jsonb')
+  roles: string[];
+  // @Column('simple-array')
+  // role: string;
   
 
   @OneToMany(() => Product, product => product.createdBy) 

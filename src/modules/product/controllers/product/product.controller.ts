@@ -2,11 +2,13 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
   Put,
   Request,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/modules/auth/auth.guard';
@@ -24,12 +26,14 @@ export class ProductController {
 
   //post api to create product
   @UseGuards(AuthGuard)
-  //@Roles(Role.Admin)
   @Post()
   async createProduct(
     @Request() req,
     @Body() createProductDto: CreateProductParams,
   ): Promise<Product> {
+    if (req.user.role !== 'admin') {
+      throw new UnauthorizedException('You do not have permission to create a product.');
+    }
     const token = req.headers.authorization.replace('Bearer ', '');
     return this.productService.createProduct(token, createProductDto);
   }
@@ -38,6 +42,9 @@ export class ProductController {
   @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteProduct(@Param('id') id: number, @Request() req): Promise<any> {
+    if (req.user.role !== 'admin') {
+      throw new UnauthorizedException('You do not have permission to create a product.');
+    }
     await this.productService.deleteProduct(id);
     return `Product with ID ${id} deleted successfully`;
   }
@@ -50,6 +57,15 @@ export class ProductController {
     @Body() updateProductDto: Partial<CreateProductParams>,
     @Request() req,
   ): Promise<Product> {
+    if (req.user.role !== 'admin') {
+      throw new UnauthorizedException('You do not have permission to create a product.');
+    }
     return this.productService.editProduct(id, updateProductDto);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get()
+  async getAllProducts(): Promise<Product[]> {
+    return this.productService.getAllProducts();
   }
 }

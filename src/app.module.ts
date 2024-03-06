@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 
 
 
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -21,7 +22,7 @@ import { APP_GUARD } from '@nestjs/core';
       password: 'Navya@2001',
       database: 'inventory_management_application',
       entities: [Product, User],
-      synchronize: false,
+      synchronize: true,
     }),
     UserModule,
     ProductModule,

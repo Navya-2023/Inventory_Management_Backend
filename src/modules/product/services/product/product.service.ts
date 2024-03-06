@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { CreateProductParams } from '../../dtos/CreateProduct.dto';
@@ -19,13 +19,18 @@ export class ProductService {
     productDetails: CreateProductParams,
   ): Promise<Product> {
     const decodedUser = await this.authService.decodeToken(token);
-    console.log(decodedUser);
     if (!decodedUser) {
       throw new NotFoundException('User not found in token');
     }
 
     const createdBy = decodedUser.sub;
-    console.log(decodedUser);
+
+    // Check if a product with the same name already exists
+    const existingProductByName = await this.productRepository.findOne({where:{ name: productDetails.name }});
+    if (existingProductByName) {
+      throw new ConflictException('A product with the same name already exists');
+    }
+
     const newProduct = this.productRepository.create({
       ...productDetails,
       createdBy: createdBy,
@@ -62,5 +67,9 @@ export class ProductService {
     }
     Object.assign(product, updateProductDto);
     return await this.productRepository.save(product);
+  }
+
+  async getAllProducts(): Promise<Product[]> {
+    return this.productRepository.find();
   }
 }
