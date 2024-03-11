@@ -110,12 +110,12 @@ export class UserService {
    * c. If a user is found, the method removes the user from the database using the 'remove' method.
    * d. The method returns a Promise that resolves once the user is successfully deleted.
    */
-  async deleteUser(id: number): Promise<void> {
+  async deleteUser(id: number): Promise<{ message: string }> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(`User with id '${id}' not found`);
     }
     await this.userRepository.remove(user);
-    console.log('User with ID ', id, ' has been deleted successfully');
+    return { message: `User with ID ${id} deleted successfully` };
   }
 }

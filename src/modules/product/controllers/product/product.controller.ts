@@ -64,14 +64,15 @@ export class ProductController {
    */
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async deleteProduct(@Param('id') id: number, @Request() req): Promise<any> {
+  async deleteProduct(@Param('id') id: number, 
+  @Request() req
+  ): Promise<{message: string}> {
     if (req.user.role !== 'admin') {
       throw new UnauthorizedException(
         'You do not have permission to delete a product.',
       );
-    }
-    await this.productService.deleteProduct(id);
-    return `Product with ID ${id} deleted successfully`;
+    }  
+    return await this.productService.deleteProduct(id);
   }
 
   /**
