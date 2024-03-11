@@ -127,12 +127,12 @@ export class UserController {
    */
 
   @Delete('/delete/:id')
-  async deleteUser(@Param('id') id: number): Promise<void> {
+  async deleteUser(@Param('id') id: number): Promise<{message:string}> {
     const existingUser = await this.userService.findUserById(id);
     if (!existingUser) {
       throw new NotFoundException(`User with id '${id}' not found`);
     }
 
-    await this.userService.deleteUser(id);
+    return await this.userService.deleteUser(id);
   }
 }

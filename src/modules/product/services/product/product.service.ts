@@ -66,7 +66,7 @@ export class ProductService {
    * d. Remove the product from the database using productRepository.remove method.
    * e. Log a success message indicating the deletion of the product with its name and ID.
    */
-  async deleteProduct(id: number): Promise<void> {
+  async deleteProduct(id: number): Promise<{ message: string }> {
     const product = await this.productRepository.findOne({ where: { id } });
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
@@ -74,13 +74,7 @@ export class ProductService {
     const productName = product.name;
     const productId = product.id;
     await this.productRepository.remove(product);
-    console.log(
-      'Product ',
-      productName,
-      ' with ID',
-      productId,
-      'deleted successfully',
-    );
+    return { message: `Product with ID ${id} deleted successfully` };
   }
 
   /**
