@@ -5,7 +5,7 @@ import { Product } from 'src/typeorm/entities/product.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { UserModule } from '../user/user.module';
-
+//This module provides functionality related to managing products.
 @Module({
   imports: [TypeOrmModule.forFeature([Product]), AuthModule],
   controllers: [ProductController],
