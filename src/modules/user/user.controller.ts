@@ -8,7 +8,6 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import { UUID } from 'crypto';
 import { User } from 'src/entities/user.entity';
@@ -16,7 +15,6 @@ import { CreateUserDto } from 'src/modules/user/dtos/create-user.dto';
 import { UserService } from 'src/modules/user/user.service';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { userResponseMessages } from './user.constants';
-import { AuthGuard } from '../auth/auth.guard';
 
 /**
  * UserController
@@ -64,7 +62,6 @@ export class UserController {
    b. Then it calls createUser to create new user
    c. It returns newly created user*/
 
-  @UseGuards(AuthGuard)
   @Post()
   @HttpCode(201)
   async createUser(
@@ -88,7 +85,6 @@ export class UserController {
    * e. Then it returns the updated user details.
    */
 
-  @UseGuards(AuthGuard)
   @Put(':id')
   async editUser(
     @Param('id') id: UUID,
@@ -113,7 +109,6 @@ export class UserController {
    * c. If the user exists, it calls the 'deleteUser' function to delete the user.
    */
 
-  @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteUser(@Param('id') id: UUID): Promise<UserResponseDto> {
     const existingUser = await this.userService.findUserById(id);

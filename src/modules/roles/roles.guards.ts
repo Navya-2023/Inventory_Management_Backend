@@ -21,8 +21,8 @@ export class RolesGuard implements CanActivate {
     const { user } = context.switchToHttp().getRequest();
     // Check if the user is an admin or an employee
     const isAdmin = user.role?.includes(Role.Admin);
-    const isEmployee = user.role?.includes(Role.Employee);
+    //const isEmployee = user.role?.includes(Role.Employee);
 
-    return isAdmin || isEmployee;
+    return isAdmin ;
   }
 }

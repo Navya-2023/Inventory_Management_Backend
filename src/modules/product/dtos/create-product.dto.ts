@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsString, IsInt, Min } from 'class-validator';
 import { User } from 'src/entities/user.entity';
-import { ProductValidationMessages } from '../validations/product-error-messages';
+import { productValidationMessages } from '../validations/product-error-messages';
+
 /**
  * DTO for creating a new product.
  * a. name: string - The name of the product.
@@ -15,22 +16,22 @@ import { ProductValidationMessages } from '../validations/product-error-messages
  */
 
 export class CreateProductParams {
-  @IsNotEmpty({ message: ProductValidationMessages.productTitleNotEmpty })
+  @IsNotEmpty({ message: productValidationMessages.productTitleNotEmpty })
   @IsString()
   productTitle: string;
 
-  @IsNotEmpty({ message: ProductValidationMessages.productDescriptionNotEmpty })
+  @IsNotEmpty({ message: productValidationMessages.productDescriptionNotEmpty })
   @IsString()
   description: string;
 
-  @IsNotEmpty({ message: ProductValidationMessages.productQuantityNotEmpty })
-  @IsInt({ message: ProductValidationMessages.productQuantityIsInt })
-  @Min(1, { message: ProductValidationMessages.productQuantityMin })
+  @IsNotEmpty({ message: productValidationMessages.productQuantityNotEmpty })
+  @IsInt({ message: productValidationMessages.productQuantityIsInt })
+  @Min(1, { message: productValidationMessages.productQuantityMin })
   quantity: number;
 
-  @IsNotEmpty({ message: ProductValidationMessages.productPriceNotEmpty })
-  @IsInt({ message: ProductValidationMessages.productPriceIsInt })
-  @Min(0, { message: ProductValidationMessages.productPriceMin })
+  @IsNotEmpty({ message: productValidationMessages.productPriceNotEmpty })
+  @IsInt({ message: productValidationMessages.productPriceIsInt })
+  @Min(0, { message: productValidationMessages.productPriceMin })
   price: number;
 
   createdBy: User;

@@ -90,7 +90,7 @@ export class ProductService {
         throw new NotFoundException(productResponseMessages.notFound);
       }
       await this.productRepository.remove(product);
-      return new ProductResponseDto(true, productResponseMessages.success, []);
+      return new ProductResponseDto(true, productResponseMessages.productDeleted, []);
     } catch (error) {
       return new ProductResponseDto(
         false,
@@ -125,7 +125,7 @@ export class ProductService {
       const updatedProduct = await this.productRepository.save(product);
       return new ProductResponseDto(
         true,
-        productResponseMessages.success,
+        productResponseMessages.productUpdated,
         [],
         updatedProduct,
       );
@@ -150,7 +150,7 @@ export class ProductService {
       const products = await this.productRepository.find();
       return new ProductResponseDto(
         true,
-        productResponseMessages.success,
+        productResponseMessages.productRetrieved,
         [],
         products,
       );

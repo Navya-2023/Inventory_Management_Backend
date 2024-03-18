@@ -6,6 +6,8 @@ export const productResponseMessages = {
   failedToDelete: 'Failed to delete product',
   failedToUpdate: 'Failed to update product',
   productCreated: 'Product created successfully',
-  success: 'Product deleted successfully',
+  productDeleted: 'Product deleted successfully',
+  productUpdated: 'Product updated successfully',
+  productRetrieved: 'Product retrieved successfully',
   failedToFetchProducts: 'Failed to fetch the products',
 };

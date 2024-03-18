@@ -47,12 +47,12 @@ export class UserService {
       const password = encodePassword(userDetails.password);
       console.log(password);
       const newUser = this.userRepository.create({ ...userDetails, password });
-      const createdUser = await this.userRepository.save(newUser);
+     // const createdUser = 
+     await this.userRepository.save(newUser);
       return new UserResponseDto(
         true,
         userResponseMessages.userCreatedSuccessfully,
         [],
-        createdUser,
       );
     } catch (error) {
       throw new UserResponseDto(
@@ -91,7 +91,7 @@ export class UserService {
         true,
         userResponseMessages.userUpdatedSuccessfully,
         [],
-        updatedUser,
+       // updatedUser,
       );
     } catch (error) {
       return new UserResponseDto(
