@@ -2,7 +2,7 @@
   "name": "inventory-management-system",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Navya@2023 <navyageorge1002@gmail.com>",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -79,5 +79,7 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "main": "index.js",
+  "repository": "https://github.com/Navya-2023/Inventory_Management_Backend.git"
 }
