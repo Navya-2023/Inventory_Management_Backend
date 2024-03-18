@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, IsInt, Min } from 'class-validator';
 import { User } from 'src/entities/user.entity';
-import { productValidationMessages } from '../validations/product-error-messages';
+import { productValidationMessages } from '../validations/product-validation-messages';
 
 /**
  * DTO for creating a new product.
