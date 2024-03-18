@@ -7,16 +7,18 @@ import {
   Post,
   Put,
   Request,
-  UnauthorizedException,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
+import { UUID } from 'crypto';
 import { AuthGuard } from 'src/modules/auth/auth.guard';
-import { CreateProductParams } from '../../dtos/CreateProduct.dto';
-import { ProductService } from '../../services/product/product.service';
-import { Product } from 'src/typeorm/entities/product.entity';
+import { RolesGuard } from '../roles/roles.guards';
+import { Roles } from '../roles/roles.decorator';
+import { Role } from '../roles/role.enum';
+import { CreateProductParams } from './dtos/create-product.dto';
+import { ProductService } from './product.service';
+import { ProductResponseDto } from './dtos/product-response.dto';
 
-@Controller('product')
+@Controller('products')
 export class ProductController {
   constructor(private productService: ProductService) {}
 
@@ -26,7 +28,7 @@ export class ProductController {
    * This function creates a new product.
    * @param req The request object containing user information.
    * @param createProductDto The DTO containing product attributes.
-   * @returns {Promise<Product>} The newly created product.
+   * @returns {Promise<ProductResponseDto>} The newly created product.
    * a. The function does not take any parameters.
    * b. It takes the request object 'req', which contains user information.
    * c. It takes the 'createProductDto' parameter, which is an instance of 'CreateProductParams' containing product creation parameters.
@@ -34,17 +36,13 @@ export class ProductController {
    * e. It extracts the token from the request headers.
    * f. Then it calls the 'createProduct' method of the 'productService' to create a new product with the provided details.
    */
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @Post()
   async createProduct(
     @Request() req,
-    @Body(new ValidationPipe()) createProductDto: CreateProductParams,
-  ): Promise<Product> {
-    if (req.user.role !== 'admin') {
-      throw new UnauthorizedException(
-        'You do not have permission to create a product.',
-      );
-    }
+    @Body() createProductDto: CreateProductParams,
+  ): Promise<ProductResponseDto> {
     const token = req.headers.authorization.replace('Bearer ', '');
     return this.productService.createProduct(token, createProductDto);
   }
@@ -62,16 +60,10 @@ export class ProductController {
    * f. If the user is not authorized to delete the product, it throws an 'UnauthorizedException' with an error message.
    * g. If any other error occurs during the deletion process, it throws an internal server error.
    */
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
-  async deleteProduct(@Param('id') id: number, 
-  @Request() req
-  ): Promise<{message: string}> {
-    if (req.user.role !== 'admin') {
-      throw new UnauthorizedException(
-        'You do not have permission to delete a product.',
-      );
-    }  
+  async deleteProduct(@Param('id') id: UUID): Promise<ProductResponseDto> {
     return await this.productService.deleteProduct(id);
   }
 
@@ -89,18 +81,13 @@ export class ProductController {
    * d. If the product is successfully edited, it returns the updated product object.
    * e. If the user is not authorized to edit the product, it throws an 'UnauthorizedException' with an error message.
    */
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
   async editProduct(
-    @Param('id') id: number,
+    @Param('id') id: UUID,
     @Body() updateProductDto: Partial<CreateProductParams>,
-    @Request() req,
-  ): Promise<Product> {
-    if (req.user.role !== 'admin') {
-      throw new UnauthorizedException(
-        'You do not have permission to edit a product.',
-      );
-    }
+  ): Promise<ProductResponseDto> {
     return this.productService.editProduct(id, updateProductDto);
   }
 
@@ -115,7 +102,7 @@ export class ProductController {
    */
   @UseGuards(AuthGuard)
   @Get()
-  async getAllProducts(): Promise<Product[]> {
+  async getAllProducts(): Promise<ProductResponseDto> {
     return this.productService.getAllProducts();
   }
 }

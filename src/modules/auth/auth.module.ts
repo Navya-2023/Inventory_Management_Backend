@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { UserModule } from '../user/user.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { jwtConstants } from './constants';
-import { UserService } from '../user/services/user/user.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/typeorm/entities/user.entity';
+import { AuthService } from './auth.service';
+import { User } from 'src/entities/user.entity';
+import { UserModule } from '../user/user.module';
+import { UserService } from '../user/user.service';
 //The AuthModule is responsible for managing authentication.
 @Module({
   imports: [

@@ -1,11 +1,9 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Product } from './typeorm/entities/product.entity';
-import { User } from './typeorm/entities/user.entity';
-import { ProductModule } from './modules/product/product.module';
-import { UserModule } from './modules/user/user.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { ProductModule } from './modules/product/product.module'
+import { UserModule } from './modules/user/user.module'
+import { AuthModule } from './modules/auth/auth.module'
 
 @Module({
   /**

@@ -4,11 +4,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthService } from 'src/modules/auth/auth.service';
-import { CreateProductParams } from '../../dtos/CreateProduct.dto';
-import { Product } from 'src/typeorm/entities/product.entity';
-import { User } from 'src/typeorm/entities/user.entity';
 import { Repository } from 'typeorm';
+import { UUID } from 'crypto';
+import { AuthService } from 'src/modules/auth/auth.service';
+import { Product } from 'src/entities/product.entity';
+import { CreateProductParams } from './dtos/create-product.dto';
+import { ProductResponseDto } from './dtos/product-response.dto';
+import { productResponseMessages } from './products.constant';
+import { userResponseMessages } from '../user/user.constants';
 
 @Injectable()
 export class ProductService {
@@ -31,28 +34,41 @@ export class ProductService {
    * g. Save the new product to the database.
    * h. Return the newly created product.
    */
+
   async createProduct(
     token: string,
     productDetails: CreateProductParams,
-  ): Promise<Product> {
+  ): Promise<ProductResponseDto> {
     const decodedUser = await this.authService.decodeToken(token);
     if (!decodedUser) {
-      throw new NotFoundException('User not found in token');
+      throw new NotFoundException(userResponseMessages.userNotFound);
     }
-    const createdBy = decodedUser.sub;
+    const createdBy = decodedUser.id;
     const existingProductByName = await this.productRepository.findOne({
-      where: { name: productDetails.name },
+      where: { productTitle: productDetails.productTitle },
     });
     if (existingProductByName) {
-      throw new ConflictException(
-        'A product with the same name already exists',
+      throw new ConflictException(productResponseMessages.alreadyExists);
+    }
+    try {
+      const newProduct = this.productRepository.create({
+        ...productDetails,
+        createdBy: createdBy,
+      });
+      const createdProduct = await this.productRepository.save(newProduct);
+      return new ProductResponseDto(
+        true,
+        productResponseMessages.productCreated,
+        [],
+        createdProduct,
+      );
+    } catch (error) {
+      return new ProductResponseDto(
+        false,
+        productResponseMessages.failedToCreate,
+        [error.message],
       );
     }
-    const newProduct = this.productRepository.create({
-      ...productDetails,
-      createdBy: createdBy,
-    });
-    return await this.productRepository.save(newProduct);
   }
 
   /**
@@ -66,17 +82,23 @@ export class ProductService {
    * d. Remove the product from the database using productRepository.remove method.
    * e. Log a success message indicating the deletion of the product with its name and ID.
    */
-  async deleteProduct(id: number): Promise<{ message: string }> {
-    const product = await this.productRepository.findOne({ where: { id } });
-    if (!product) {
-      throw new NotFoundException(`Product with ID ${id} not found`);
-    }
-    const productName = product.name;
-    const productId = product.id;
-    await this.productRepository.remove(product);
-    return { message: `Product with ID ${id} deleted successfully` };
-  }
 
+  async deleteProduct(id: UUID): Promise<ProductResponseDto> {
+    try {
+      const product = await this.productRepository.findOne({ where: { id } });
+      if (!product) {
+        throw new NotFoundException(productResponseMessages.notFound);
+      }
+      await this.productRepository.remove(product);
+      return new ProductResponseDto(true, productResponseMessages.success, []);
+    } catch (error) {
+      return new ProductResponseDto(
+        false,
+        productResponseMessages.failedToDelete,
+        [error.message],
+      );
+    }
+  }
   /**
    * Updates an existing product in the database.
    * @param id The ID of the product to be updated.
@@ -89,16 +111,31 @@ export class ProductService {
    * d. Save the updated product to the database using the productRepository.save method.
    * e. Return the updated product.
    */
+
   async editProduct(
-    id: number,
+    id: UUID,
     updateProductDto: Partial<CreateProductParams>,
-  ): Promise<Product> {
-    const product = await this.productRepository.findOne({ where: { id } });
-    if (!product) {
-      throw new NotFoundException(`Product with ID ${id} not found`);
+  ): Promise<ProductResponseDto> {
+    try {
+      const product = await this.productRepository.findOne({ where: { id } });
+      if (!product) {
+        throw new NotFoundException(productResponseMessages.notFound);
+      }
+      Object.assign(product, updateProductDto);
+      const updatedProduct = await this.productRepository.save(product);
+      return new ProductResponseDto(
+        true,
+        productResponseMessages.success,
+        [],
+        updatedProduct,
+      );
+    } catch (error) {
+      return new ProductResponseDto(
+        false,
+        productResponseMessages.failedToUpdate,
+        [error.message],
+      );
     }
-    Object.assign(product, updateProductDto);
-    return await this.productRepository.save(product);
   }
 
   /**
@@ -107,7 +144,22 @@ export class ProductService {
    * a. Retrieve all products using find method.
    * b. Return the array of products.
    */
-  async getAllProducts(): Promise<Product[]> {
-    return this.productRepository.find();
+
+  async getAllProducts(): Promise<ProductResponseDto> {
+    try {
+      const products = await this.productRepository.find();
+      return new ProductResponseDto(
+        true,
+        productResponseMessages.success,
+        [],
+        products,
+      );
+    } catch (error) {
+      return new ProductResponseDto(
+        false,
+        productResponseMessages.failedToFetchProducts,
+        [error.message],
+      );
+    }
   }
 }
