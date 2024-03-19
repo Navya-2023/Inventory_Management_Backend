@@ -5,11 +5,11 @@ import {
   IsEmail,
   Matches,
   ArrayNotEmpty,
-  IsArray,
-} from 'class-validator';
-import { UUID } from 'crypto';
-import { Role } from 'src/modules/roles/role.enum';
-import { userValidationMessages } from '../validations/user-validation-messages';
+  IsArray
+} from 'class-validator'
+import { UUID } from 'crypto'
+import { Role } from 'src/modules/roles/role.enum'
+import { userValidationMessages } from '../validations/user-validation-messages'
 
 /**
  *  The DTO is for creating a new user.
@@ -30,19 +30,19 @@ export class CreateUserDto {
   @IsNotEmpty({ message: userValidationMessages.usernameNotEmpty })
   @MinLength(5, { message: userValidationMessages.usernameMinLength })
   @IsString()
-  userName: string;
+  userName: string
 
   @IsNotEmpty({ message: userValidationMessages.emailNotEmpty })
   @IsEmail({}, { message: userValidationMessages.emailFormatInvalid })
-  email: string;
+  email: string
 
   @IsNotEmpty({ message: userValidationMessages.passwordNotEmpty })
   @Matches(/^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/, {
-    message: userValidationMessages.passwordComplexity,
+    message: userValidationMessages.passwordComplexity
   })
-  password: string;
+  password: string
 
   @IsArray()
   @ArrayNotEmpty({ message: userValidationMessages.rolesNotEmpty })
-  userRole: Role[];
+  userRole: Role[]
 }

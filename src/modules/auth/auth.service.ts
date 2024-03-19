@@ -1,18 +1,18 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { JwtService } from '@nestjs/jwt';
-import { decodePassword } from 'src/utils/bcrypt.utils';
-import { SigninDto } from './signInDto.dto';
-import { User } from 'src/entities/user.entity';
-import { UserService } from '../user/user.service';
+import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { JwtService } from '@nestjs/jwt'
+import { decodePassword } from 'src/utils/bcrypt.utils'
+import { SigninDto } from './signInDto.dto'
+import { User } from 'src/entities/user.entity'
+import { UserService } from '../user/user.service'
 //AuthService manages user authentication operations like signing in and token decoding.
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(User) private userRepository: Repository<User>
   ) {}
 
   /**
@@ -27,19 +27,19 @@ export class AuthService {
    * Returns the token
    */
   async signIn(signInDto: SigninDto): Promise<{ access_token: string }> {
-    const { email, password } = signInDto;
-    const user = await this.userRepository.findOne({ where: { email } });
+    const { email, password } = signInDto
+    const user = await this.userRepository.findOne({ where: { email } })
     if (!user || decodePassword(password, user.password) === false) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new UnauthorizedException('Invalid email or password')
     }
     const payload = {
       sub: user.id,
       username: user.userName,
-      role: user.userRole,
+      role: user.userRole
     };
     return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
+      access_token: await this.jwtService.signAsync(payload)
+    }
   }
 
   /**
@@ -52,10 +52,10 @@ export class AuthService {
    */
   async decodeToken(token: string): Promise<any> {
     try {
-      const decoded = this.jwtService.decode(token);
-      return decoded;
+      const decoded = this.jwtService.decode(token)
+      return decoded
     } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('Invalid token')
     }
   }
 }

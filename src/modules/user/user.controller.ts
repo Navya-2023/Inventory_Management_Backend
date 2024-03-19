@@ -7,14 +7,14 @@ import {
   NotFoundException,
   Param,
   Post,
-  Put,
-} from '@nestjs/common';
-import { UUID } from 'crypto';
-import { User } from 'src/entities/user.entity';
-import { CreateUserDto } from 'src/modules/user/dtos/create-user.dto';
-import { UserService } from 'src/modules/user/user.service';
-import { UserResponseDto } from './dtos/user-response.dto';
-import { userResponseMessages } from './user.constants';
+  Put
+} from '@nestjs/common'
+import { UUID } from 'crypto'
+import { User } from 'src/entities/user.entity'
+import { CreateUserDto } from 'src/modules/user/dtos/create-user.dto'
+import { UserService } from 'src/modules/user/user.service'
+import { UserResponseDto } from './dtos/user-response.dto'
+import { userResponseMessages } from './user.constants'
 
 /**
  * UserController
@@ -43,8 +43,8 @@ export class UserController {
 
   @Get(':userName')
   async getUserByUsername(@Param('userName') userName: string): Promise<User> {
-    const user = await this.userService.findUserByUsername(userName);
-    return user;
+    const user = await this.userService.findUserByUsername(userName)
+    return user
   }
 
   /**
@@ -65,9 +65,9 @@ export class UserController {
   @Post()
   @HttpCode(201)
   async createUser(
-    @Body() createUserDto: CreateUserDto,
+    @Body() createUserDto: CreateUserDto
   ): Promise<UserResponseDto> {
-    return await this.userService.createUser(createUserDto);
+    return await this.userService.createUser(createUserDto)
   }
 
   /**
@@ -88,14 +88,13 @@ export class UserController {
   @Put(':id')
   async editUser(
     @Param('id') id: UUID,
-    @Body() updateUserDto: CreateUserDto,
+    @Body() updateUserDto: CreateUserDto
   ): Promise<UserResponseDto> {
-    const existingUser = await this.userService.findUserById(id);
+    const existingUser = await this.userService.findUserById(id)
     if (!existingUser) {
-      throw new NotFoundException();
+      throw new NotFoundException()
     }
-
-    return await this.userService.editUser(id, updateUserDto);
+    return await this.userService.editUser(id, updateUserDto)
   }
 
   /**
@@ -111,11 +110,11 @@ export class UserController {
 
   @Delete(':id')
   async deleteUser(@Param('id') id: UUID): Promise<UserResponseDto> {
-    const existingUser = await this.userService.findUserById(id);
+    const existingUser = await this.userService.findUserById(id)
     if (!existingUser) {
-      throw new NotFoundException(userResponseMessages.userNotFound);
+      throw new NotFoundException(userResponseMessages.userNotFound)
     }
-
-    return await this.userService.deleteUser(id);
+    return await this.userService.deleteUser(id)
   }
+
 }

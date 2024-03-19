@@ -3,6 +3,6 @@ export class UserResponseDto {
   constructor(
     public success: boolean,
     public message: string,
-    public errors: string[] = [],
+    public errors: string[] = []
   ) {}
 }

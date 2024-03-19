@@ -2,22 +2,22 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UUID } from 'crypto';
-import { AuthService } from 'src/modules/auth/auth.service';
-import { Product } from 'src/entities/product.entity';
-import { CreateProductParams } from './dtos/create-product.dto';
-import { ProductResponseDto } from './dtos/product-response.dto';
-import { productResponseMessages } from './products.constant';
-import { userResponseMessages } from '../user/user.constants';
+} from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { UUID } from 'crypto'
+import { AuthService } from 'src/modules/auth/auth.service'
+import { Product } from 'src/entities/product.entity'
+import { CreateProductParams } from './dtos/create-product.dto'
+import { ProductResponseDto } from './dtos/product-response.dto'
+import { productResponseMessages } from './products.constant'
+import { userResponseMessages } from '../user/user.constants'
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product) private productRepository: Repository<Product>,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
   /**
@@ -37,37 +37,37 @@ export class ProductService {
 
   async createProduct(
     token: string,
-    productDetails: CreateProductParams,
+    productDetails: CreateProductParams
   ): Promise<ProductResponseDto> {
-    const decodedUser = await this.authService.decodeToken(token);
+    const decodedUser = await this.authService.decodeToken(token)
     if (!decodedUser) {
-      throw new NotFoundException(userResponseMessages.userNotFound);
+      throw new NotFoundException(userResponseMessages.userNotFound)
     }
-    const createdBy = decodedUser.id;
+    const createdBy = decodedUser.id
     const existingProductByName = await this.productRepository.findOne({
-      where: { productTitle: productDetails.productTitle },
-    });
+      where: { productTitle: productDetails.productTitle }
+    })
     if (existingProductByName) {
-      throw new ConflictException(productResponseMessages.alreadyExists);
+      throw new ConflictException(productResponseMessages.alreadyExists)
     }
     try {
       const newProduct = this.productRepository.create({
         ...productDetails,
-        createdBy: createdBy,
-      });
-      const createdProduct = await this.productRepository.save(newProduct);
+        createdBy: createdBy
+      })
+      const createdProduct = await this.productRepository.save(newProduct)
       return new ProductResponseDto(
         true,
         productResponseMessages.productCreated,
         [],
-        createdProduct,
-      );
+        createdProduct
+      )
     } catch (error) {
       return new ProductResponseDto(
         false,
         productResponseMessages.failedToCreate,
-        [error.message],
-      );
+        [error.message]
+      )
     }
   }
 
@@ -85,18 +85,18 @@ export class ProductService {
 
   async deleteProduct(id: UUID): Promise<ProductResponseDto> {
     try {
-      const product = await this.productRepository.findOne({ where: { id } });
+      const product = await this.productRepository.findOne({ where: { id } })
       if (!product) {
-        throw new NotFoundException(productResponseMessages.notFound);
+        throw new NotFoundException(productResponseMessages.notFound)
       }
-      await this.productRepository.remove(product);
-      return new ProductResponseDto(true, productResponseMessages.productDeleted, []);
+      await this.productRepository.remove(product)
+      return new ProductResponseDto(true, productResponseMessages.productDeleted, [])
     } catch (error) {
       return new ProductResponseDto(
         false,
         productResponseMessages.failedToDelete,
-        [error.message],
-      );
+        [error.message]
+      )
     }
   }
   /**

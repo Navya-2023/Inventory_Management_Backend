@@ -9,5 +9,5 @@ export const productResponseMessages = {
   productDeleted: 'Product deleted successfully',
   productUpdated: 'Product updated successfully',
   productRetrieved: 'Product retrieved successfully',
-  failedToFetchProducts: 'Failed to fetch the products',
+  failedToFetchProducts: 'Failed to fetch the products'
 };

@@ -9,5 +9,5 @@ export const userResponseMessages = {
   failedToDeleteUser: 'Failed to delete user',
   userRetrievedSuccessfully: 'User retrieved successfully',
   failedToRetrieveUser: 'Failed to retrieve user',
-  userUpdatedSuccessfully: 'User updated successfully',
-};
+  userUpdatedSuccessfully: 'User updated successfully'
+}
