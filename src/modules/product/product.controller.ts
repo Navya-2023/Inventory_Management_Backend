@@ -8,15 +8,15 @@ import {
   Put,
   Request,
   UseGuards,
-} from '@nestjs/common';
-import { UUID } from 'crypto';
-import { AuthGuard } from 'src/modules/auth/auth.guard';
-import { RolesGuard } from '../roles/roles.guards';
-import { Roles } from '../roles/roles.decorator';
-import { Role } from '../roles/role.enum';
-import { CreateProductParams } from './dtos/create-product.dto';
-import { ProductService } from './product.service';
-import { ProductResponseDto } from './dtos/product-response.dto';
+} from '@nestjs/common'
+import { UUID } from 'crypto'
+import { AuthGuard } from 'src/modules/auth/auth.guard'
+import { RolesGuard } from '../roles/roles.guards'
+import { Roles } from '../roles/roles.decorator'
+import { Role } from '../roles/role.enum'
+import { CreateProductParams } from './dtos/create-product.dto'
+import { ProductService } from './product.service'
+import { ProductResponseDto } from './dtos/product-response.dto'
 
 @Controller('products')
 export class ProductController {
@@ -41,10 +41,10 @@ export class ProductController {
   @Post()
   async createProduct(
     @Request() req,
-    @Body() createProductDto: CreateProductParams,
+    @Body() createProductDto: CreateProductParams
   ): Promise<ProductResponseDto> {
-    const token = req.headers.authorization.replace('Bearer ', '');
-    return this.productService.createProduct(token, createProductDto);
+    const token = req.headers.authorization.replace('Bearer ', '')
+    return this.productService.createProduct(token, createProductDto)
   }
 
   /**
@@ -64,7 +64,7 @@ export class ProductController {
   @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
   async deleteProduct(@Param('id') id: UUID): Promise<ProductResponseDto> {
-    return await this.productService.deleteProduct(id);
+    return await this.productService.deleteProduct(id)
   }
 
   /**
@@ -86,9 +86,9 @@ export class ProductController {
   @Put(':id')
   async editProduct(
     @Param('id') id: UUID,
-    @Body() updateProductDto: Partial<CreateProductParams>,
+    @Body() updateProductDto: Partial<CreateProductParams>
   ): Promise<ProductResponseDto> {
-    return this.productService.editProduct(id, updateProductDto);
+    return this.productService.editProduct(id, updateProductDto)
   }
 
   // Get API to retrieve all products
@@ -103,6 +103,6 @@ export class ProductController {
   @UseGuards(AuthGuard)
   @Get()
   async getAllProducts(): Promise<ProductResponseDto> {
-    return this.productService.getAllProducts();
+    return this.productService.getAllProducts()
   }
 }

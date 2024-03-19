@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsString, IsInt, Min } from 'class-validator';
-import { User } from 'src/entities/user.entity';
-import { productValidationMessages } from '../validations/product-validation-messages';
+import { IsNotEmpty, IsString, IsInt, Min } from 'class-validator'
+import { User } from 'src/entities/user.entity'
+import { productValidationMessages } from '../validations/product-validation-messages'
 
 /**
  * DTO for creating a new product.
@@ -18,21 +18,21 @@ import { productValidationMessages } from '../validations/product-validation-mes
 export class CreateProductParams {
   @IsNotEmpty({ message: productValidationMessages.productTitleNotEmpty })
   @IsString()
-  productTitle: string;
+  productTitle: string
 
   @IsNotEmpty({ message: productValidationMessages.productDescriptionNotEmpty })
   @IsString()
-  description: string;
+  description: string
 
   @IsNotEmpty({ message: productValidationMessages.productQuantityNotEmpty })
   @IsInt({ message: productValidationMessages.productQuantityIsInt })
   @Min(1, { message: productValidationMessages.productQuantityMin })
-  quantity: number;
+  quantity: number
 
   @IsNotEmpty({ message: productValidationMessages.productPriceNotEmpty })
   @IsInt({ message: productValidationMessages.productPriceIsInt })
   @Min(0, { message: productValidationMessages.productPriceMin })
-  price: number;
+  price: number
 
-  createdBy: User;
+  createdBy: User
 }
