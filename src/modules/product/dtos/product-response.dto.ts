@@ -8,3 +8,4 @@ export class ProductResponseDto {
     public data?: Product | Product[]
   ) {}
 }
+

@@ -14,7 +14,7 @@ import { User } from 'src/entities/user.entity'
 import { CreateUserDto } from 'src/modules/user/dtos/create-user.dto'
 import { UserService } from 'src/modules/user/user.service'
 import { UserResponseDto } from './dtos/user-response.dto'
-import { userResponseMessages } from './user.constants'
+import { config } from 'src/config/messages/config'
 
 /**
  * UserController
@@ -25,7 +25,6 @@ import { userResponseMessages } from './user.constants'
    - Retrieve user details using username.
    - Retrieve user details using ID.
  */
-
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -40,7 +39,6 @@ export class UserController {
    * c. If a user with the username is not found, then it throws a 'NotFoundException' with an error message.
    * d. If a user is found, then it returns the user object.
    */
-
   @Get(':userName')
   async getUserByUsername(@Param('userName') userName: string): Promise<User> {
     const user = await this.userService.findUserByUsername(userName)
@@ -61,7 +59,6 @@ export class UserController {
    a. The function takes a createUserDto parameter, which is an instance of the CreateUserDto class containing user creation parameters.
    b. Then it calls createUser to create new user
    c. It returns newly created user*/
-
   @Post()
   @HttpCode(201)
   async createUser(
@@ -84,7 +81,6 @@ export class UserController {
    * d. If the user exists, it calls the 'editUser' to update the user's details.
    * e. Then it returns the updated user details.
    */
-
   @Put(':id')
   async editUser(
     @Param('id') id: UUID,
@@ -107,14 +103,14 @@ export class UserController {
    *    If the user is not found, it throws a 'NotFoundException' with an appropriate error message.
    * c. If the user exists, it calls the 'deleteUser' function to delete the user.
    */
-
   @Delete(':id')
-  async deleteUser(@Param('id') id: UUID): Promise<UserResponseDto> {
+  async deleteUser(@Param('id') id: UUID
+  ): Promise<UserResponseDto> {
     const existingUser = await this.userService.findUserById(id)
     if (!existingUser) {
-      throw new NotFoundException(userResponseMessages.userNotFound)
+      throw new NotFoundException(config.userNotFound)
     }
     return await this.userService.deleteUser(id)
   }
-
 }
+

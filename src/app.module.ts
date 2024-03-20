@@ -4,12 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { ProductModule } from './modules/product/product.module'
 import { UserModule } from './modules/user/user.module'
 import { AuthModule } from './modules/auth/auth.module'
+import { SnakeNamingStrategy } from './naming-strategies/snake_naming_strategy'
+
 @Module({
-  /**
-   * AppModule
-   * This module serves as the root module of the NestJS application.
-   * It imports and configures other modules required for the application, including user management, product management, and authentication.
-   */
+
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
@@ -20,11 +18,14 @@ import { AuthModule } from './modules/auth/auth.module'
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
       autoLoadEntities: true,
-      synchronize: false
+      synchronize: false,
+      namingStrategy: new SnakeNamingStrategy(),
     }),
     UserModule,
     ProductModule,
     AuthModule
   ]
 })
+
 export class AppModule {}
+

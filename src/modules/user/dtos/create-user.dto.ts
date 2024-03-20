@@ -8,41 +8,30 @@ import {
   IsArray
 } from 'class-validator'
 import { UUID } from 'crypto'
+import { config } from 'src/config/messages/config'
 import { Role } from 'src/modules/roles/role.enum'
-import { userValidationMessages } from '../validations/user-validation-messages'
 
-/**
- *  The DTO is for creating a new user.
- *
- * a. id: number (optional) - The unique identifier of the user.
- * b. username: string - The username of the user.
- *    Validation: Must not be empty and must be at least 5 characters long.
- * c. email: string - The email address of the user.
- *    Validation: Must not be empty and must be a valid email format.
- * d. password: string - The password of the user.
- *    Validation: Must not be empty and must meet certain complexity requirements.
- *    Must contain at least one number, one letter, one special character, and be at least 8 characters long.
- */
-
+//The DTO is for creating a new user.
 export class CreateUserDto {
   id: UUID;
 
-  @IsNotEmpty({ message: userValidationMessages.usernameNotEmpty })
-  @MinLength(5, { message: userValidationMessages.usernameMinLength })
+  @IsNotEmpty({ message: config.usernameNotEmpty })
+  @MinLength(5, { message: config.usernameMinLength })
   @IsString()
   userName: string
 
-  @IsNotEmpty({ message: userValidationMessages.emailNotEmpty })
-  @IsEmail({}, { message: userValidationMessages.emailFormatInvalid })
+  @IsNotEmpty({ message: config.emailNotEmpty })
+  @IsEmail({}, { message: config.emailFormatInvalid })
   email: string
 
-  @IsNotEmpty({ message: userValidationMessages.passwordNotEmpty })
+  @IsNotEmpty({ message: config.passwordNotEmpty })
   @Matches(/^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/, {
-    message: userValidationMessages.passwordComplexity
+    message: config.passwordComplexity
   })
   password: string
 
   @IsArray()
-  @ArrayNotEmpty({ message: userValidationMessages.rolesNotEmpty })
+  @ArrayNotEmpty({ message: config.rolesNotEmpty })
   userRole: Role[]
 }
+
