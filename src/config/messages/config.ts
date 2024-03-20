@@ -24,15 +24,16 @@ export const config = {
   passwordNotEmpty: 'The password cannot be empty.',
   passwordComplexity:'Password must contain at least one number, one letter, one special character, and be at least 8 characters long.',
   rolesNotEmpty: 'The role cannot be empty.',
-  userAlreadyExists: 'User already exists',
-  userCreatedSuccessfully: 'User created successfully',
-  userFailedToCreate: 'Failed to create user',
-  userNotFound: 'User not found',
-  userFailedToUpdate: 'Failed to update user',
-  userDeletedSuccessfully: 'User deleted successfully',
-  userFailedToDelete: 'Failed to delete user',
-  userRetrievedSuccessfully: 'User retrieved successfully',
-  userFailedToRetrieve: 'Failed to retrieve user',
-  userUpdatedSuccessfully: 'User updated successfully',
-  invalidEmailPassword:'Invalid email or password'
+  userAlreadyExists: 'User already exists.',
+  userCreatedSuccessfully: 'User created successfully.',
+  userFailedToCreate: 'Failed to create user.',
+  userNotFound: 'User not found.',
+  userFailedToUpdate: 'Failed to update user.',
+  userDeletedSuccessfully: 'User deleted successfully.',
+  userFailedToDelete: 'Failed to delete user.',
+  userRetrievedSuccessfully: 'User retrieved successfully.',
+  userFailedToRetrieve: 'Failed to retrieve user.',
+  userUpdatedSuccessfully: 'User updated successfully.',
+  invalidEmailPassword:'Invalid email or password.'
 }
+
