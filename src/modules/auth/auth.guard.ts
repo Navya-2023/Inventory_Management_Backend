@@ -11,6 +11,7 @@ import { Request } from 'express'
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
+
   /**
    *
    * @param context gives access to current context.
@@ -49,3 +50,4 @@ export class AuthGuard implements CanActivate {
     return type === 'Bearer' ? token : undefined;
   }
 }
+

@@ -9,7 +9,6 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common'
-import { UUID } from 'crypto'
 import { AuthGuard } from 'src/modules/auth/auth.guard'
 import { RolesGuard } from '../roles/roles.guards'
 import { Roles } from '../roles/roles.decorator'
@@ -63,7 +62,7 @@ export class ProductController {
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
-  async deleteProduct(@Param('id') id: UUID): Promise<ProductResponseDto> {
+  async deleteProduct(@Param('id') id: number): Promise<ProductResponseDto> {
     return await this.productService.deleteProduct(id)
   }
 
@@ -85,7 +84,7 @@ export class ProductController {
   @UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
   async editProduct(
-    @Param('id') id: UUID,
+    @Param('id') id: number,
     @Body() updateProductDto: Partial<CreateProductParams>
   ): Promise<ProductResponseDto> {
     return this.productService.editProduct(id, updateProductDto)
@@ -106,3 +105,4 @@ export class ProductController {
     return this.productService.getAllProducts()
   }
 }
+

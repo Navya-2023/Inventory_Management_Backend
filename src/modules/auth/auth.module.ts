@@ -7,6 +7,7 @@ import { AuthService } from './auth.service'
 import { User } from 'src/entities/user.entity'
 import { UserModule } from '../user/user.module'
 import { UserService } from '../user/user.service'
+
 //The AuthModule is responsible for managing authentication.
 @Module({
   imports: [
@@ -22,4 +23,6 @@ import { UserService } from '../user/user.service'
   controllers: [AuthController],
   exports: [AuthService]
 })
+
 export class AuthModule {}
+
