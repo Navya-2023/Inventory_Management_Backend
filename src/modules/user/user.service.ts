@@ -38,14 +38,16 @@ export class UserService {
    */
   async createUser(userDetails: CreateUserDto): Promise<UserResponseDto> {
     try {
-      const existingUser = await this.findUserByUsername(userDetails.userName)
-      if (existingUser) {
+      const existingUser = await this.userRepository.findOne({ where: { email:userDetails.email } });
+      console.log(existingUser,"hiiiiii")
+      //const existingUser = await this.userRepository.find({where:{userDetails.email}})
+      if (existingUser) {    
         throw new ConflictException(config.userAlreadyExists)
       }
       userDetails.email = userDetails.email.toLowerCase()
       const password = encodePassword(userDetails.password)
-      console.log(password)
       const newUser = this.userRepository.create({ ...userDetails, password })
+      console.log(newUser)
       await this.userRepository.save(newUser)
       return new UserResponseDto(true, config.userCreatedSuccessfully, [])
     } catch (error) {
